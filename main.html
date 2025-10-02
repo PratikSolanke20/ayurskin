@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkinAura - Professional Skin Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fafbfc;
+            color: #334155;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #0F2C59 0%, #1E3A8A 100%);
+            color: white;
+            padding: 28px 40px;
+            text-align: center;
+        }
+
+        .demo-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .demo-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        .demo-content {
+            display: flex;
+            padding: 35px;
+            gap: 35px;
+        }
+
+        .upload-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .upload-area {
+            border: 2px dashed #e2e8f0;
+            border-radius: 14px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .upload-area.active {
+            border-color: #5c7b6f;
+            background: rgba(92, 123, 111, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3.2rem;
+            color: #cbd5e1;
+            margin-bottom: 18px;
+        }
+
+        .upload-area.active .upload-icon {
+            color: #5c7b6f;
+        }
+
+        .upload-area h3 {
+            color: #0f2c59;
+            margin-bottom: 12px;
+            font-size: 1.35rem;
+            font-weight: 600;
+        }
+
+        .upload-area p {
+            color: #64748b;
+            margin-bottom: 22px;
+            font-size: 1.05rem;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #5c7b6f 0%, #4a6a5f 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 12px rgba(92, 123, 111, 0.25);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(92, 123, 111, 0.35);
+        }
+
+        .image-preview {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+            height: 320px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .analysis-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #0f2c59 0%, #1e3a8a 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 12px rgba(15, 44, 89, 0.25);
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(15, 44, 89, 0.35);
+        }
+
+        .analyze-btn:disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .analyze-next-btn {
+            background: white;
+            color: #5c7b6f;
+            border: 2px solid #5c7b6f;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 12px rgba(92, 123, 111, 0.15);
+        }
+
+        .analyze-next-btn:hover {
+            background: #5c7b6f;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(92, 123, 111, 0.25);
+        }
+
+        .result-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .result-placeholder {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 45px 28px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .placeholder-icon {
+            font-size: 3.2rem;
+            color: #cbd5e1;
+            margin-bottom: 22px;
+        }
+
+        .result-placeholder h3 {
+            color: #0f2c59;
+            margin-bottom: 16px;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .result-placeholder p {
+            color: #64748b;
+            font-size: 1.05rem;
+        }
+
+        .analysis-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            padding: 45px 28px;
+            text-align: center;
+            background: #f8fafc;
+            border-radius: 14px;
+            height: 100%;
+        }
+
+        .progress-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #f0f9ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #0ea5e9;
+            border-top-color: transparent;
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-text {
+            color: #0f2c59;
+            font-weight: 600;
+            font-size: 1.15rem;
+        }
+
+        .analysis-result {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .result-header h3 {
+            color: #0f2c59;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .confidence-label {
+            background: #f0f9ff;
+            color: #0ea5e9;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .findings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .findings-container h4 {
+            color: #0f2c59;
+            font-size: 1.35rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .concern-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .concern-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .concern-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .concern-image {
+            position: relative;
+            height: 170px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #e2e8f0;
+        }
+
+        .concern-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .issue-marker {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border: 2px solid #ff3b30;
+            border-radius: 50%;
+            background: rgba(255, 59, 48, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .concern-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .concern-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concern-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .concern-icon.acne {
+            background: #f87171;
+        }
+
+        .concern-icon.hyperpigmentation {
+            background: #a16207;
+        }
+
+        .concern-icon.dryness {
+            background: #0ea5e9;
+        }
+
+        .concern-details h5 {
+            color: #0f2c59;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .concern-details p {
+            color: #64748b;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .severity-label {
+            padding: 5px 14px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            align-self: flex-start;
+        }
+
+        .severity-label.mild {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .severity-label.moderate {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .severity-label.severe {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .solutions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .solutions-container h4 {
+            color: #0f2c59;
+            font-size: 1.35rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .solution-tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 18px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 14px 22px;
+            cursor: pointer;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 1.05rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #0f2c59;
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #5c7b6f;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .solution-item, .product-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .solution-item:hover, .product-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .solution-header, .product-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .solution-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #5c7b6f;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .product-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 1.4rem;
+        }
+
+        .solution-details h5, .product-details h5 {
+            color: #0f2c59;
+            font-size: 1.15rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .solution-details p, .product-details p {
+            color: #64748b;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            color: #5c7b6f;
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-top: 8px;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .error-icon {
+            font-size: 3.2rem;
+            color: #ef4444;
+        }
+
+        .error-message h3 {
+            color: #dc2626;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .error-message p {
+            color: #64748b;
+            font-size: 1.05rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Face detection indicator */
+        .face-detection {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 9px 14px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            z-index: 10;
+            font-size: 0.95rem;
+        }
+
+        .face-detection.success {
+            color: #16a34a;
+        }
+
+        .face-detection.error {
+            color: #dc2626;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .demo-content {
+                flex-direction: column;
+            }
+            
+            .concern-list, .tab-content.active {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .demo-header {
+                padding: 24px 28px;
+            }
+            
+            .demo-header h2 {
+                font-size: 1.9rem;
+            }
+            
+            .demo-header p {
+                font-size: 1.05rem;
+            }
+            
+            .demo-content {
+                padding: 28px;
+                gap: 28px;
+            }
+            
+            .upload-area, .analysis-result {
+                padding: 24px;
+            }
+            
+            .result-header {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+            
+            .solution-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .face-detection {
+                top: 12px;
+                right: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            
+            .demo-header {
+                padding: 20px;
+            }
+            
+            .demo-content {
+                padding: 20px;
+            }
+            
+            .upload-area, .analysis-result, .error-message {
+                padding: 20px;
+            }
+            
+            .upload-btn, .analyze-btn, .analyze-next-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h2>Professional Skin Analysis</h2>
+            <p>Upload your photo to receive AI-powered skin analysis with personalized Ayurvedic solutions</p>
+        </div>
+        
+        <div class="demo-content">
+            <div class="upload-section" id="uploadArea">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Upload Your Photo</h3>
+                    <h3>Drop your image here, or click to browse</h3>
+                    <p>For accurate results, use a clear, well-lit front-facing photo</p>
+                    <label for="fileInput" class="upload-btn">
+                        <i class="fas fa-upload"></i> Select Image
+                    </label>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <p class="privacy-note"><i class="fas fa-shield-alt"></i> Your photo is processed securely and never stored</p>
+                </div>
+                
+                <div class="image-preview hidden" id="imagePreview">
+                    <img id="previewImage" src="" alt="Preview">
+                    <div class="face-detection hidden" id="faceDetection">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Face Detected</span>
+                    </div>
+                </div>
+                
+                <div class="analysis-controls">
+                    <button class="analyze-btn hidden" id="analyzeBtn" disabled>
+                        <i class="fas fa-search"></i> Analyze Now
+                    </button>
+                    
+                    <button class="analyze-next-btn hidden" id="analyzeNextBtn">
+                        <i class="fas fa-redo"></i> Analyze Another Image
+                    </button>
+                </div>
+            </div>
+
+            <br>
+            <hr>
+            
+            <div class="result-section">
+                <div class="result-placeholder" id="resultPlaceholder">
+                    <i class="fas fa-microscope placeholder-icon"></i>
+                    <h3>Analysis Results Will Appear Here</h3>
+                    <p>Upload a photo to see detailed skin analysis and recommendations</p>
+                </div>
+                
+                <div class="analysis-progress hidden" id="analysisProgress">
+                    <div class="progress-circle"></div>
+                    <p class="progress-text">Analyzing your skin...</p>
+                </div>
+                
+                <div class="error-message hidden" id="errorMessage">
+                    <i class="fas fa-exclamation-circle error-icon"></i>
+                    <h3>Face Not Detected</h3>
+                    <p>We couldn't detect a face in your photo. Please make sure you're using a clear, front-facing image with good lighting.</p>
+                    <button class="analyze-next-btn" id="errorNextBtn">
+                        <i class="fas fa-redo"></i> Try Another Image
+                    </button>
+                </div>
+                
+                <div class="analysis-result hidden" id="analysisResult">
+                    <div class="result-header">
+                        <h3>Analysis Complete</h3>
+                        <div class="confidence-label">94% Confidence</div>
+                    </div>
+                    
+                    <div class="findings-container">
+                        <h4>Detected Skin Concerns</h4>
+                        <div class="concern-list">
+                            <div class="concern-item">
+                                <div class="concern-image">
+                                    <img id="acneImage" src="" alt="Acne areas">
+                                    <div class="issue-marker" style="top: 30%; left: 40%;"></div>
+                                    <div class="issue-marker" style="top: 45%; left: 60%;"></div>
+                                    <div class="issue-marker" style="top: 35%; left: 55%;"></div>
+                                </div>
+                                <div class="concern-details">
+                                    <div class="concern-title">
+                                        <div class="concern-icon acne"><i class="fas fa-circle"></i></div>
+                                        <h5>Acne & Blemishes</h5>
+                                    </div>
+                                    <p>Moderate inflammatory acne with active blemishes detected</p>
+                                    <div class="severity-label moderate">Moderate</div>
+                                </div>
+                            </div>
+                            
+                            <div class="concern-item">
+                                <div class="concern-image">
+                                    <img id="spotsImage" src="" alt="Dark spots">
+                                    <div class="issue-marker" style="top: 50%; left: 45%;"></div>
+                                    <div class="issue-marker" style="top: 55%; left: 35%;"></div>
+                                </div>
+                                <div class="concern-details">
+                                    <div class="concern-title">
+                                        <div class="concern-icon hyperpigmentation"><i class="fas fa-circle"></i></div>
+                                        <h5>Dark Spots</h5>
+                                    </div>
+                                    <p>Post-inflammatory hyperpigmentation from previous breakouts</p>
+                                    <div class="severity-label mild">Mild</div>
+                                </div>
+                            </div>
+                            
+                            <div class="concern-item">
+                                <div class="concern-image">
+                                    <img id="drynessImage" src="" alt="Dry areas">
+                                    <div class="issue-marker" style="top: 70%; left: 50%;"></div>
+                                    <div class="issue-marker" style="top: 75%; left: 40%;"></div>
+                                </div>
+                                <div class="concern-details">
+                                    <div class="concern-title">
+                                        <div class="concern-icon dryness"><i class="fas fa-circle"></i></div>
+                                        <h5>Dryness & Dehydration</h5>
+                                    </div>
+                                    <p>Skin barrier impairment with mild flaking and tightness</p>
+                                    <div class="severity-label mild">Mild</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="solutions-container">
+                        <h4>Recommended Solutions</h4>
+                        <div class="solution-tabs">
+                            <button class="tab-btn active" data-tab="remedies">Ayurvedic Remedies</button>
+                            <button class="tab-btn" data-tab="products">Recommended Products</button>
+                        </div>
+                        
+                        <div class="tab-content remedies active">
+                            <div class="solution-item">
+                                <div class="solution-header">
+                                    <div class="solution-icon"><i class="fas fa-mortar-pestle"></i></div>
+                                    <div class="solution-details">
+                                        <h5>Neem & Turmeric Face Pack</h5>
+                                        <p>Anti-inflammatory treatment to reduce acne and prevent breakouts</p>
+                                    </div>
+                                </div>
+                                <p><strong>How to use:</strong> Mix 1 tsp neem powder, ½ tsp turmeric, and rose water. Apply twice weekly.</p>
+                            </div>
+                            
+                            <div class="solution-item">
+                                <div class="solution-header">
+                                    <div class="solution-icon"><i class="fas fa-seedling"></i></div>
+                                    <div class="solution-details">
+                                        <h5>Aloe Vera & Honey Moisturizer</h5>
+                                        <p>Natural hydrator to soothe dryness and restore skin barrier</p>
+                                    </div>
+                                </div>
+                                <p><strong>How to use:</strong> Apply fresh aloe vera gel with a few drops of honey daily.</p>
+                            </div>
+                            
+                            <div class="solution-item">
+                                <div class="solution-header">
+                                    <div class="solution-icon"><i class="fas fa-spa"></i></div>
+                                    <div class="solution-details">
+                                        <h5>Sandalwood & Rosewater Paste</h5>
+                                        <p>Reduces dark spots and evens out skin tone</p>
+                                    </div>
+                                </div>
+                                <p><strong>How to use:</strong> Mix sandalwood powder with rosewater, apply for 15 minutes, then rinse.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-content products">
+                            <div class="product-item">
+                                <div class="product-header">
+                                    <div class="product-image"><i class="fas fa-pump-soap"></i></div>
+                                    <div class="product-details">
+                                        <h5>Neem Infused Face Wash</h5>
+                                        <p>Deep cleans without stripping natural oils</p>
+                                        <div class="product-price">$24.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="product-item">
+                                <div class="product-header">
+                                    <div class="product-image"><i class="fas fa-tint"></i></div>
+                                    <div class="product-details">
+                                        <h5>Turmeric Spot Correction Serum</h5>
+                                        <p>Targets dark spots and hyperpigmentation</p>
+                                        <div class="product-price">$29.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="product-item">
+                                <div class="product-header">
+                                    <div class="product-image"><i class="fas fa-cloud-rain"></i></div>
+                                    <div class="product-details">
+                                        <h5>Aloe Hydrating Moisturizer</h5>
+                                        <p>Provides 24-hour hydration for dry skin</p>
+                                        <div class="product-price">$32.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const faceDetection = document.getElementById('faceDetection');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const analyzeNextBtn = document.getElementById('analyzeNextBtn');
+            const errorNextBtn = document.getElementById('errorNextBtn');
+            const resultPlaceholder = document.getElementById('resultPlaceholder');
+            const analysisProgress = document.getElementById('analysisProgress');
+            const analysisResult = document.getElementById('analysisResult');
+            const errorMessage = document.getElementById('errorMessage');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const acneImage = document.getElementById('acneImage');
+            const spotsImage = document.getElementById('spotsImage');
+            const drynessImage = document.getElementById('drynessImage');
+            
+            // Face detection patterns (simulated)
+            const FACE_PATTERNS = [
+                'face', 'person', 'portrait', 'selfie', 'profile', 'facial',
+                'woman', 'man', 'girl', 'boy', 'female', 'male'
+            ];
+            
+            // Non-face patterns
+            const NON_FACE_PATTERNS = [
+                'watch', 'clock', 'wrist', 'object', 'landscape', 'building',
+                'animal', 'pet', 'car', 'vehicle', 'food', 'dish', 'nature'
+            ];
+            
+            // Event listeners
+            fileInput.addEventListener('change', handleFileSelect);
+            analyzeBtn.addEventListener('click', analyzeImage);
+            analyzeNextBtn.addEventListener('click', resetAnalysis);
+            errorNextBtn.addEventListener('click', resetAnalysis);
+            
+            // Tab functionality
+            tabBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    tabBtns.forEach(function(b) {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(function(tab) {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Show selected tab content
+                    const tabName = this.getAttribute('data-tab');
+                    document.querySelector(`.tab-content.${tabName}`).classList.add('active');
+                });
+            });
+            
+            // Handle file selection
+            function handleFileSelect(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        // Also set the source for the concern images
+                        acneImage.src = e.target.result;
+                        spotsImage.src = e.target.result;
+                        drynessImage.src = e.target.result;
+                        
+                        uploadArea.classList.add('hidden');
+                        imagePreview.classList.remove('hidden');
+                        
+                        // Simulate face detection based on file name and type
+                        simulateFaceDetection(file);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            // Simulate face detection based on file properties
+            function simulateFaceDetection(file) {
+                // Show detecting message
+                faceDetection.classList.remove('hidden');
+                faceDetection.classList.remove('success', 'error');
+                faceDetection.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Detecting face...</span>';
+                
+                // Extract file name without extension
+                const fileName = file.name.toLowerCase().replace(/\.[^/.]+$/, "");
+                
+                // Check if file name suggests it's a face image
+                const hasFacePattern = FACE_PATTERNS.some(pattern => fileName.includes(pattern));
+                const hasNonFacePattern = NON_FACE_PATTERNS.some(pattern => fileName.includes(pattern));
+                
+                // Check if image is likely a portrait (by dimensions)
+                const img = new Image();
+                img.onload = function() {
+                    const isPortrait = img.width < img.height;
+                    const isSquare = Math.abs(img.width - img.height) < 50;
+                    
+                    // Simulate detection process
+                    setTimeout(() => {
+                        // More sophisticated detection simulation
+                        let isFace = false;
+                        
+                        // Rule 1: If filename contains face-related terms, it's likely a face
+                        if (hasFacePattern) {
+                            isFace = true;
+                        }
+                        // Rule 2: If filename contains non-face terms, it's likely not a face
+                        else if (hasNonFacePattern) {
+                            isFace = false;
+                        }
+                        // Rule 3: If image is portrait orientation, more likely to be a face
+                        else if (isPortrait || isSquare) {
+                            // 80% chance for portrait images to be faces
+                            isFace = Math.random() < 0.8;
+                        }
+                        // Rule 4: Landscape images are less likely to be faces
+                        else {
+                            // 20% chance for landscape images to be faces
+                            isFace = Math.random() < 0.2;
+                        }
+                        
+                        if (isFace) {
+                            // Face detected
+                            faceDetection.classList.add('success');
+                            faceDetection.innerHTML = '<i class="fas fa-check-circle"></i><span>Face Detected</span>';
+                            analyzeBtn.disabled = false;
+                            analyzeBtn.classList.remove('hidden');
+                        } else {
+                            // Face not detected
+                            faceDetection.classList.add('error');
+                            faceDetection.innerHTML = '<i class="fas fa-times-circle"></i><span>No Face Detected</span>';
+                            analyzeBtn.classList.add('hidden');
+                            
+                            // Show error message after a delay
+                            setTimeout(() => {
+                                resultPlaceholder.classList.add('hidden');
+                                errorMessage.classList.remove('hidden');
+                                analyzeNextBtn.classList.remove('hidden');
+                            }, 1500);
+                        }
+                    }, 2000);
+                };
+                img.src = URL.createObjectURL(file);
+            }
+            
+            // Analyze the image
+            function analyzeImage() {
+                // Show progress, hide other elements
+                analyzeBtn.classList.add('hidden');
+                resultPlaceholder.classList.add('hidden');
+                analysisProgress.classList.remove('hidden');
+                
+                // Simulate analysis process
+                setTimeout(() => {
+                    // Show results
+                    analysisProgress.classList.add('hidden');
+                    analysisResult.classList.remove('hidden');
+                    analyzeNextBtn.classList.remove('hidden');
+                }, 3000); // Simulate 3 second analysis
+            }
+            
+            // Reset for next analysis
+            function resetAnalysis() {
+                // Reset file input
+                fileInput.value = '';
+                
+                // Reset UI elements
+                analyzeBtn.disabled = true;
+                analyzeNextBtn.classList.add('hidden');
+                analysisResult.classList.add('hidden');
+                errorMessage.classList.add('hidden');
+                imagePreview.classList.add('hidden');
+                faceDetection.classList.add('hidden');
+                uploadArea.classList.remove('hidden');
+                resultPlaceholder.classList.remove('hidden');
+            }
+            
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#5c7b6f';
+                this.style.backgroundColor = rgba(92, 123, 111, 0.05);
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#e2e8f0';
+                this.style.backgroundColor = '#f8fafc';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#e2e8f0';
+                this.style.backgroundColor = '#f8fafc';
+                
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
