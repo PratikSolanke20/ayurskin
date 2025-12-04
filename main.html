@@ -1428,85 +1428,6 @@
                     <p class="privacy-note"><i class="fas fa-shield-alt"></i> Your photo is processed securely and never stored</p>
 
 
-
-
-
-
-<!-- index.html (snippet) -->
-<input id="file" type="file" accept="image/*">
-<img id="preview" style="max-width:320px; display:block;">
-<button id="analyseBtn" disabled>Analyse now</button>
-
-<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
-<script>
-const fileInput = document.getElementById('file');
-const img = document.getElementById('preview');
-const btn = document.getElementById('analyseBtn');
-
-async function loadModels() {
-  // point to models folder hosted by you or use a CDN copy
-  await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-  // other models if needed
-}
-loadModels();
-
-fileInput.onchange = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  img.src = URL.createObjectURL(file);
-  img.onload = async () => {
-    // run detection
-    const detection = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions());
-    if (detection) {
-      btn.disabled = false;
-      btn.dataset.filename = file.name; // we will upload when pressed
-    } else {
-      btn.disabled = true;
-      alert('No face detected — please upload a clear close-up of the face.');
-    }
-  };
-};
-
-btn.onclick = async () => {
-  // send form data with image to your backend
-  const file = fileInput.files[0];
-  const fd = new FormData();
-  fd.append('image', file);
-  // include landmarks if you used FaceMesh
-  const res = await fetch('/api/analyze', { method:'POST', body: fd });
-  const json = await res.json();
-  // render results
-  console.log(json);
-  // show structured output to user
-};
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     
 
 
@@ -2443,4 +2364,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
+
 
